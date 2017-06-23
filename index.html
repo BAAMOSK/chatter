@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <title>Chatter</title>
+</head>
+<body>
+  <div class="container">
+    <table>
+      <tr>
+        <th>Users</th>
+        <th>Message</th>
+      </tr>
+      <tr>
+        <td>Tee</td>
+        <td class="chat"></td>
+      </tr>
+    </table>
+    <form class="form" action="">
+      <input class="message" type="text">
+      <button>Send</button>
+    </form>
+  </div>
+  <script>
+    $(function() {
+      const socket = io.connect();
+      const form = $('.form');
+      const message = $('.message');
+      const chat = $('.chat');
+
+      form.submit( (event) => {
+        event.preventDefault();
+        socket.emit('send message', message.val());
+        message.val('');
+        socket.on('new message', data => {
+          chat.append(data.msg);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
